@@ -4,190 +4,201 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Bingo da Matemática</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
   <style>
-    * {
-      box-sizing: border-box;
+    :root {
+      --color-primary: #4f46e5;
+      --color-primary-light: #6366f1;
+      --color-primary-dark: #4338ca;
+      --color-accent: #10b981;
+      --color-accent-dark: #059669;
+      --color-background: #f8fafc;
+      --color-surface: #ffffff;
+      --color-text-primary: #1e293b;
+      --color-text-secondary: #475569;
+      --color-border: #e2e8f0;
+      --font-family-main: "Poppins", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+      --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+      --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
+      --border-radius: 12px;
+      --transition-speed: 0.3s;
+    }
+    * { box-sizing: border-box; }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
     }
     body {
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-      background: #f7f9fc;
-      margin: 0;
-      padding: 0;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      min-height: 100vh;
-      color: #333;
+      font-family: var(--font-family-main);
+      background: var(--color-background);
+      margin: 0; padding: 0;
+      display: flex; flex-direction: column;
+      align-items: center; min-height: 100vh;
+      color: var(--color-text-primary);
     }
     h1 {
-      background-color: #3b82f6;
-      color: white;
-      width: 100%;
-      margin: 0;
-      padding: 20px 0;
-      font-weight: 700;
-      text-align: center;
-      box-shadow: 0 4px 8px rgba(59,130,246,.4);
-      user-select: none;
+      background-color: var(--color-primary);
+      color: white; width: 100%; margin: 0;
+      padding: 24px 0; font-weight: 700;
+      text-align: center; box-shadow: var(--shadow-md);
+      user-select: none; font-size: 2.25rem;
     }
     main {
-      max-width: 900px;
-      width: 95%;
-      margin-top: 30px;
-      flex-grow: 1;
-      text-align: center;
+      max-width: 900px; width: 95%;
+      margin-top: 20px; /* Reduzido para acomodar o botão de voltar */
+      flex-grow: 1; text-align: center;
+      position: relative;
     }
-    .hidden {
-      display: none !important;
-    }
+    .hidden { display: none !important; }
     button {
-      background-color: #3b82f6;
-      border: none;
-      border-radius: 8px;
-      color: white;
-      padding: 14px 24px;
-      font-size: 1.1rem;
-      font-weight: 600;
-      margin: 8px;
-      cursor: pointer;
-      transition: background-color 0.3s ease, transform 0.1s ease;
-      user-select: none;
+      background-color: var(--color-primary);
+      border: none; border-radius: var(--border-radius);
+      color: white; padding: 14px 28px;
+      font-size: 1.1rem; font-weight: 600;
+      font-family: inherit; margin: 8px; cursor: pointer;
+      transition: all var(--transition-speed) ease;
+      user-select: none; box-shadow: var(--shadow-sm);
     }
     button:hover:not(:disabled) {
-      background-color: #2563eb;
+      background-color: var(--color-primary-light);
+      transform: translateY(-2px); box-shadow: var(--shadow-md);
     }
     button:active:not(:disabled) {
-      transform: scale(0.98);
+      transform: translateY(0px) scale(0.98); box-shadow: var(--shadow-sm);
     }
     button:disabled {
-      background-color: #94a3b8;
-      cursor: not-allowed;
+      background-color: #94a3b8; cursor: not-allowed;
+    }
+    /* --- ESTILO DO BOTÃO DE VOLTAR - NOVO --- */
+    .btn-voltar {
+        background-color: transparent;
+        color: var(--color-text-secondary);
+        border: 2px solid var(--color-border);
+        padding: 8px 16px;
+        font-size: 0.9rem;
+        margin-bottom: 20px;
+    }
+    .btn-voltar:hover:not(:disabled) {
+        background-color: var(--color-background);
+        border-color: var(--color-text-secondary);
+        color: var(--color-text-primary);
+        transform: translateY(-1px);
+        box-shadow: var(--shadow-sm);
     }
     input[type="text"], input[type="password"] {
-      font-size: 1.1rem;
-      padding: 12px;
-      width: 100%;
-      max-width: 320px;
-      margin: 10px 0 20px 0;
-      border: 2px solid #cbd5e1;
-      border-radius: 8px;
-      outline: none;
-      transition: border-color 0.3s ease, box-shadow 0.3s ease;
+      font-size: 1.1rem; font-family: inherit;
+      padding: 14px; width: 100%; max-width: 350px;
+      margin: 10px 0 20px 0; border: 2px solid var(--color-border);
+      border-radius: var(--border-radius); outline: none;
+      transition: all var(--transition-speed) ease;
+      background-color: var(--color-background);
     }
     input[type="text"]:focus, input[type="password"]:focus {
-      border-color: #3b82f6;
-      box-shadow: 0 0 0 3px rgba(59,130,246,.3);
+      border-color: var(--color-primary);
+      box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.2);
+      background-color: var(--color-surface);
     }
     #inicio, #tipo-equacao, #nome-aluno, #jogo-aluno, #professor-area {
-      background: white;
-      border-radius: 12px;
-      padding: 30px;
-      box-shadow: 0 8px 25px rgba(0,0,0,0.08);
-      margin-bottom: 40px;
+      background: var(--color-surface);
+      border-radius: 16px; padding: 30px 40px;
+      box-shadow: var(--shadow-lg); margin-bottom: 40px;
+      animation: fadeIn 0.5s ease-out forwards;
     }
     h2 {
-      font-weight: 600;
-      margin-top: 0;
-      margin-bottom: 25px;
-      color: #1e293b;
+      font-weight: 700; font-size: 1.75rem;
+      margin-top: 0; margin-bottom: 30px;
+      color: var(--color-text-primary);
     }
     #cartela {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 12px;
-      max-width: 360px;
-      margin: 20px auto;
-      user-select: none;
+      display: grid; grid-template-columns: repeat(4, 1fr);
+      gap: 15px; max-width: 400px;
+      margin: 25px auto; user-select: none;
     }
     .cell {
-      background-color: #f1f5f9;
-      padding: 22px 0;
-      border-radius: 8px;
-      font-size: 1.5rem;
-      font-weight: 700;
-      cursor: pointer;
-      border: 2px solid #e2e8f0;
-      transition: all 0.2s ease;
-      user-select: none;
+      background-color: #f1f5f9; aspect-ratio: 1 / 1;
+      display: flex; align-items: center; justify-content: center;
+      border-radius: var(--border-radius); font-size: 1.75rem;
+      font-weight: 700; cursor: pointer;
+      border: 2px solid var(--color-border);
+      transition: all 0.2s ease-in-out; user-select: none;
+    }
+    .cell:not(.marked):hover {
+        transform: translateY(-4px); box-shadow: var(--shadow-md);
+        border-color: var(--color-primary-light);
     }
     .cell.marked {
-      background-color: #22c55e;
-      color: white;
-      border-color: #16a34a;
-      transform: scale(1.05);
-      box-shadow: 0 4px 15px rgba(34,197,94,.4);
-      cursor: default;
+      background-color: var(--color-accent); color: white;
+      border-color: var(--color-accent-dark); transform: scale(1.05);
+      box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4); cursor: default;
     }
+    #bingo-notification, #cartela-numero, #welcome-msg, #professor-equation, #professor-gabarito, #professor-winners {
+        user-select: none; /* Aplicado a mais elementos para consistência */
+    }
+    #professor-equation { user-select: text; }
     #bingo-notification {
-      margin-top: 20px;
-      font-weight: 700;
-      font-size: 1.8rem;
-      color: #16a34a;
-      min-height: 40px;
-      user-select: none;
+      margin-top: 25px; font-weight: 700;
+      font-size: 2rem; color: var(--color-accent-dark);
+      min-height: 45px;
     }
     #cartela-numero {
-      font-style: italic;
-      margin-top: 5px;
-      font-weight: 600;
-      color: #475569;
-      user-select: none;
+      font-style: italic; margin-top: 10px;
+      font-weight: 600; color: var(--color-text-secondary);
     }
     #welcome-msg {
-      max-width: 600px;
-      margin: 0 auto 20px auto;
-      line-height: 1.6;
-      color: #334155;
+      max-width: 600px; margin: 0 auto 25px auto;
+      line-height: 1.7; color: var(--color-text-secondary);
+      font-size: 1.1rem;
     }
     #professor-equation {
-      font-size: 1.8rem;
-      font-weight: 700;
-      margin: 20px 0;
-      padding: 15px;
-      background-color: #eff6ff;
-      border-radius: 8px;
-      color: #1d4ed8;
-      user-select: text;
+      font-size: 2rem; font-weight: 700;
+      margin: 25px 0; padding: 20px;
+      background-color: #eef2ff;
+      border-radius: var(--border-radius);
+      color: var(--color-primary-dark);
+      border: 2px dashed var(--color-primary-light);
     }
     #professor-gabarito {
-      margin-top: 20px;
-      max-height: 300px;
-      overflow-y: auto;
-      border: 1px solid #cbd5e1;
-      padding: 15px;
-      border-radius: 8px;
-      background: #f8fafc;
-      font-family: monospace;
-      font-size: 1rem;
-      white-space: pre-wrap;
+      margin-top: 25px; max-height: 300px;
+      overflow-y: auto; border: 1px solid var(--color-border);
+      padding: 20px; border-radius: var(--border-radius);
+      background: var(--color-background);
+      font-family: "SF Mono", "Fira Code", "Source Code Pro", monospace;
+      font-size: 1rem; white-space: pre-wrap;
       text-align: left;
     }
     #professor-winners {
-      margin-top: 20px;
-      font-weight: 700;
-      color: #059669;
-      font-size: 1.2rem;
-      user-select: none;
+      margin-top: 20px; font-weight: 700;
+      color: var(--color-accent-dark); font-size: 1.3rem;
     }
-    @media (max-width: 500px) {
+    @media (max-width: 600px) {
       h1 { font-size: 1.8rem; }
-      #cartela { grid-template-columns: repeat(4, 1fr); gap: 8px; }
-      .cell { font-size: 1.2rem; padding: 18px 0; }
+      main { margin-top: 20px; }
+      #cartela { gap: 10px; }
+      .cell { font-size: 1.4rem; }
       button { width: 100%; margin-left: 0; margin-right: 0; }
+      #inicio, #tipo-equacao, #nome-aluno, #jogo-aluno, #professor-area { padding: 25px; }
+      h2 { font-size: 1.5rem; }
+      .btn-voltar { width: auto; float: left; } /* Botão de voltar não ocupa a largura toda */
     }
   </style>
 </head>
 <body>
   <h1>Bingo da Matemática</h1>
   <main>
+    <!-- BOTÃO VOLTAR AO INÍCIO - NOVO -->
+    <button id="btnVoltarInicio" class="btn-voltar hidden">← Voltar ao Início</button>
+    
     <!-- TELA 1: INÍCIO -->
     <section id="inicio">
       <h2>Quem é Você?</h2>
-      <button id="btnAluno">Aluno</button>
-      <button id="btnProfessor">Professor</button>
+      <button id="btnAluno">Sou Aluno</button>
+      <button id="btnProfessor">Sou Professor</button>
     </section>
-
-    <!-- TELA 2: ESCOLHA TIPO EQUAÇÃO -->
+    
+    <!-- DEMAIS TELAS... -->
     <section id="tipo-equacao" class="hidden">
       <h2>Escolha o tipo de Equação</h2>
       <button data-tipo="1grau">Equações do 1º Grau</button>
@@ -195,14 +206,12 @@
       <button data-tipo="misturado">Equações Mistas</button>
     </section>
 
-    <!-- TELA 3: NOME ALUNO -->
     <section id="nome-aluno" class="hidden">
       <h2>Qual o seu nome?</h2>
       <input type="text" id="input-nome" placeholder="Digite seu nome aqui" autocomplete="off" />
       <button id="btnAvancarAluno">Avançar</button>
     </section>
 
-    <!-- TELA 4: JOGO ALUNO -->
     <section id="jogo-aluno" class="hidden">
       <p id="welcome-msg"></p>
       <button id="btn-gerar-cartela">Gerar Minha Cartela!</button>
@@ -211,7 +220,6 @@
       <div id="bingo-notification"></div>
     </section>
 
-    <!-- TELA 5: ÁREA DO PROFESSOR -->
     <section id="professor-area" class="hidden">
       <h2>Área do Professor</h2>
       <div>
@@ -228,13 +236,13 @@
 
 <script>
 (() => {
-  // --- GERAÇÃO DE DADOS DINÂMICOS --- //
+  // A lógica de geração de dados permanece a mesma...
   const eq1Grau = [];
   while (eq1Grau.length < 30) {
-    let a = Math.floor(Math.random() * 9) + 1; // a de 1 a 9
-    if (Math.random() < 0.5) a = -a; // 50% de chance de ser negativo
-    let x = Math.floor(Math.random() * 21) - 10; // resultado de -10 a 10
-    let b = Math.floor(Math.random() * 41) - 20; // b de -20 a 20
+    let a = Math.floor(Math.random() * 9) + 1;
+    if (Math.random() < 0.5) a = -a;
+    let x = Math.floor(Math.random() * 21) - 10;
+    let b = Math.floor(Math.random() * 41) - 20;
     let c = a * x + b;
     const bStr = b === 0 ? '' : (b > 0 ? ` + ${b}` : ` - ${Math.abs(b)}`);
     const strEq = `${a === 1 ? '' : (a === -1 ? '-' : a)}x${bStr} = ${c}`;
@@ -245,7 +253,7 @@
 
   const eq2Grau = [];
   while (eq2Grau.length < 30) {
-    let a = Math.random() < 0.5 ? 1 : -1; // a = 1 ou -1 para simplificar
+    let a = Math.random() < 0.5 ? 1 : -1;
     let x1 = Math.floor(Math.random() * 21) - 10;
     let x2 = Math.floor(Math.random() * 21) - 10;
     if (x1 === x2) continue;
@@ -268,7 +276,7 @@
   function gerarCartelaNumeros() {
     const numeros = new Set();
     while (numeros.size < 16) {
-      numeros.add(Math.floor(Math.random() * 21) - 10); // Números de -10 a 10
+      numeros.add(Math.floor(Math.random() * 21) - 10);
     }
     return Array.from(numeros);
   }
@@ -278,18 +286,15 @@
     }
   }
 
-  // --- ESTADO GLOBAL DO JOGO --- //
-  let estado = {
-    usuario: null,
-    tipoEquacao: null,
-    nomeAluno: '',
-    cartelaAluno: null,
-    cartelaAlunoID: null,
-    professorEquacoesSorteadas: [],
-    professorIndexSorteio: 0,
-    cartelasVencedoras: [],
-    bingoAnunciado: false,
-  };
+  // Objeto de estado inicial
+  const getEstadoInicial = () => ({
+    usuario: null, tipoEquacao: null, nomeAluno: '',
+    cartelaAluno: null, cartelaAlunoID: null,
+    professorEquacoesSorteadas: [], professorIndexSorteio: 0,
+    cartelasVencedoras: [], bingoAnunciado: false,
+  });
+
+  let estado = getEstadoInicial();
 
   // --- REFERÊNCIAS DO DOM --- //
   const sections = {
@@ -299,6 +304,7 @@
     jogoAluno: document.getElementById('jogo-aluno'),
     professorArea: document.getElementById('professor-area'),
   };
+  const btnVoltarInicio = document.getElementById('btnVoltarInicio'); // NOVO
   const welcomeMsg = document.getElementById('welcome-msg');
   const btnGerarCartela = document.getElementById('btn-gerar-cartela');
   const cartelaNumero = document.getElementById('cartela-numero');
@@ -311,15 +317,40 @@
   const professorGabarito = document.getElementById('professor-gabarito');
   const professorWinners = document.getElementById('professor-winners');
 
-  // --- FUNÇÕES DE CONTROLE DE TELA --- //
+  // --- FUNÇÕES DE CONTROLE DE TELA (MODIFICADA) --- //
   function mostrarTela(nomeTela) {
-    for (let tela in sections) {
-      sections[tela].classList.add('hidden');
-    }
+    Object.values(sections).forEach(s => s.classList.add('hidden'));
     sections[nomeTela].classList.remove('hidden');
+    
+    // Gerencia a visibilidade do botão de voltar
+    if (nomeTela === 'inicio') {
+      btnVoltarInicio.classList.add('hidden');
+    } else {
+      btnVoltarInicio.classList.remove('hidden');
+    }
+  }
+  
+  // --- FUNÇÃO PARA RESETAR O JOGO (NOVA) --- //
+  function resetarParaOInicio() {
+      estado = getEstadoInicial();
+      
+      // Limpar campos e elementos da UI
+      document.getElementById('input-nome').value = '';
+      cartelaGrid.innerHTML = '';
+      cartelaNumero.textContent = '';
+      bingoNotification.textContent = '';
+      btnGerarCartela.style.display = 'inline-block';
+      professorEquation.textContent = 'Aguardando sorteio...';
+      professorGabarito.classList.add('hidden');
+      professorWinners.classList.add('hidden');
+      
+      mostrarTela('inicio');
   }
 
+
   // --- FLUXO DO JOGO --- //
+  btnVoltarInicio.onclick = resetarParaOInicio; // NOVO
+
   document.getElementById('btnAluno').onclick = () => {
     estado.usuario = 'aluno';
     mostrarTela('tipoEquacao');
@@ -330,7 +361,7 @@
     if (senha === 'bingodamatematica') {
       estado.usuario = 'professor';
       mostrarTela('tipoEquacao');
-    } else {
+    } else if (senha !== null) {
       alert('Senha incorreta!');
     }
   };
@@ -340,6 +371,7 @@
       estado.tipoEquacao = btn.dataset.tipo;
       if (estado.usuario === 'aluno') {
         mostrarTela('nomeAluno');
+        document.getElementById('input-nome').focus();
       } else {
         iniciarProfessor();
       }
@@ -355,6 +387,12 @@
     estado.nomeAluno = nome;
     iniciarJogoAluno();
   };
+  
+  document.getElementById('input-nome').addEventListener('keyup', (event) => {
+    if (event.key === 'Enter') {
+        document.getElementById('btnAvancarAluno').click();
+    }
+  });
 
   // --- LÓGICA DO ALUNO --- //
   function iniciarJogoAluno() {
@@ -372,7 +410,7 @@
     const listaCartelas = cartelas[estado.tipoEquacao];
     const idCartela = Math.floor(Math.random() * listaCartelas.length);
     estado.cartelaAluno = listaCartelas[idCartela];
-    estado.cartelaAlunoID = idCartela + 1; // ID 1-20
+    estado.cartelaAlunoID = idCartela + 1;
 
     cartelaGrid.innerHTML = '';
     estado.cartelaAluno.forEach(valor => {
@@ -423,6 +461,7 @@
     professorWinners.classList.add('hidden');
   }
 
+  // O restante do JavaScript (lógica do professor, etc.) permanece o mesmo...
   btnExibirEquacao.onclick = () => {
     let equacoesDisponiveis;
     if (estado.tipoEquacao === '1grau') equacoesDisponiveis = eq1Grau;
@@ -431,6 +470,7 @@
 
     const jaSorteadas = new Set(estado.professorEquacoesSorteadas.map(e => e.eq));
     const naoSorteadas = equacoesDisponiveis.filter(e => !jaSorteadas.has(e.eq));
+    
     if (naoSorteadas.length === 0) {
       professorEquation.textContent = 'Todas as equações foram sorteadas!';
       btnExibirEquacao.disabled = true;
@@ -447,7 +487,6 @@
   };
 
   btnGabarito.onclick = () => {
-    // Montar texto do gabarito
     let gabaritoTxt = "Gabarito das equações sorteadas:\n\n";
     estado.professorEquacoesSorteadas.forEach((e, i) => {
       const resTxt = Array.isArray(e.res) ? e.res.join(', ') : e.res;
@@ -456,7 +495,6 @@
     professorGabarito.textContent = gabaritoTxt;
     professorGabarito.classList.remove('hidden');
 
-    // Verificar cartelas vencedoras
     const vencedoras = verificarCartelasVencedoras();
     if (vencedoras.length === 0) {
       professorWinners.textContent = "Nenhuma cartela fez BINGO ainda.";
@@ -484,7 +522,7 @@
       for (const vitoria of vitorias) {
         if (vitoria.every(pos => respostasSorteadas.has(cartela[pos]))) {
           cartelasVencedoras.push(idx + 1);
-          break; // Vai para a próxima cartela
+          break;
         }
       }
     });

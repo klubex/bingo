@@ -1,171 +1,499 @@
-<!DOCTYPE html><html lang="pt-BR">
+<!DOCTYPE html>
+<html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Bingo Matemático</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Bingo da Matemática</title>
   <style>
+    * {
+      box-sizing: border-box;
+    }
     body {
-      font-family: 'Arial', sans-serif;
-      text-align: center;
-      background-color: #fef8e4;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: #f7f9fc;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+      color: #333;
     }
     h1 {
-      color: #d35400;
+      background-color: #3b82f6;
+      color: white;
+      width: 100%;
+      margin: 0;
+      padding: 20px 0;
+      font-weight: 700;
+      text-align: center;
+      box-shadow: 0 4px 8px rgba(59,130,246,.4);
+      user-select: none;
     }
-    .controls, .equation, .score {
-      margin: 10px;
-    }
-    #bingo-card {
-      display: grid;
-      grid-template-columns: repeat(5, 60px);
-      grid-gap: 10px;
-      justify-content: center;
-      margin: 20px auto;
-    }
-    .cell {
-      background-color: #fff;
-      border: 2px solid #3498db;
-      border-radius: 10px;
-      padding: 15px;
-      font-size: 18px;
-      cursor: pointer;
-      transition: background-color 0.3s;
-    }
-    .cell.correct {
-      background-color: #2ecc71;
-      color: #fff;
-    }
-    .cell.wrong {
-      background-color: #e74c3c;
-      color: #fff;
+    main {
+      max-width: 900px;
+      width: 95%;
+      margin-top: 30px;
+      flex-grow: 1;
+      text-align: center;
     }
     .hidden {
-      display: none;
+      display: none !important;
+    }
+    button {
+      background-color: #3b82f6;
+      border: none;
+      border-radius: 8px;
+      color: white;
+      padding: 14px 24px;
+      font-size: 1.1rem;
+      font-weight: 600;
+      margin: 8px;
+      cursor: pointer;
+      transition: background-color 0.3s ease, transform 0.1s ease;
+      user-select: none;
+    }
+    button:hover:not(:disabled) {
+      background-color: #2563eb;
+    }
+    button:active:not(:disabled) {
+      transform: scale(0.98);
+    }
+    button:disabled {
+      background-color: #94a3b8;
+      cursor: not-allowed;
+    }
+    input[type="text"], input[type="password"] {
+      font-size: 1.1rem;
+      padding: 12px;
+      width: 100%;
+      max-width: 320px;
+      margin: 10px 0 20px 0;
+      border: 2px solid #cbd5e1;
+      border-radius: 8px;
+      outline: none;
+      transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    }
+    input[type="text"]:focus, input[type="password"]:focus {
+      border-color: #3b82f6;
+      box-shadow: 0 0 0 3px rgba(59,130,246,.3);
+    }
+    #inicio, #tipo-equacao, #nome-aluno, #jogo-aluno, #professor-area {
+      background: white;
+      border-radius: 12px;
+      padding: 30px;
+      box-shadow: 0 8px 25px rgba(0,0,0,0.08);
+      margin-bottom: 40px;
+    }
+    h2 {
+      font-weight: 600;
+      margin-top: 0;
+      margin-bottom: 25px;
+      color: #1e293b;
+    }
+    #cartela {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+      max-width: 360px;
+      margin: 20px auto;
+      user-select: none;
+    }
+    .cell {
+      background-color: #f1f5f9;
+      padding: 22px 0;
+      border-radius: 8px;
+      font-size: 1.5rem;
+      font-weight: 700;
+      cursor: pointer;
+      border: 2px solid #e2e8f0;
+      transition: all 0.2s ease;
+      user-select: none;
+    }
+    .cell.marked {
+      background-color: #22c55e;
+      color: white;
+      border-color: #16a34a;
+      transform: scale(1.05);
+      box-shadow: 0 4px 15px rgba(34,197,94,.4);
+      cursor: default;
+    }
+    #bingo-notification {
+      margin-top: 20px;
+      font-weight: 700;
+      font-size: 1.8rem;
+      color: #16a34a;
+      min-height: 40px;
+      user-select: none;
+    }
+    #cartela-numero {
+      font-style: italic;
+      margin-top: 5px;
+      font-weight: 600;
+      color: #475569;
+      user-select: none;
+    }
+    #welcome-msg {
+      max-width: 600px;
+      margin: 0 auto 20px auto;
+      line-height: 1.6;
+      color: #334155;
+    }
+    #professor-equation {
+      font-size: 1.8rem;
+      font-weight: 700;
+      margin: 20px 0;
+      padding: 15px;
+      background-color: #eff6ff;
+      border-radius: 8px;
+      color: #1d4ed8;
+      user-select: text;
+    }
+    #professor-gabarito {
+      margin-top: 20px;
+      max-height: 300px;
+      overflow-y: auto;
+      border: 1px solid #cbd5e1;
+      padding: 15px;
+      border-radius: 8px;
+      background: #f8fafc;
+      font-family: monospace;
+      font-size: 1rem;
+      white-space: pre-wrap;
+      text-align: left;
+    }
+    #professor-winners {
+      margin-top: 20px;
+      font-weight: 700;
+      color: #059669;
+      font-size: 1.2rem;
+      user-select: none;
+    }
+    @media (max-width: 500px) {
+      h1 { font-size: 1.8rem; }
+      #cartela { grid-template-columns: repeat(4, 1fr); gap: 8px; }
+      .cell { font-size: 1.2rem; padding: 18px 0; }
+      button { width: 100%; margin-left: 0; margin-right: 0; }
     }
   </style>
 </head>
 <body>
-  <h1>Bingo Matemático</h1>
-  <div class="controls">
-    <label for="difficulty">Nível:</label>
-    <select id="difficulty">
-      <option value="facil">Fácil</option>
-      <option value="medio">Médio</option>
-      <option value="dificil">Difícil</option>
-    </select>
-    <button onclick="startGame()">Iniciar</button>
-    <button onclick="restartGame()">Reiniciar</button>
-  </div>  <div class="equation">
-    <h2 id="equation"></h2>
-  </div>  <div id="bingo-card"></div>  <div class="score">
-    <p>Acertos: <span id="score">0</span> / <span id="total">0</span></p>
-  </div>  <script>
-    let currentAnswer = null;
-    let score = 0;
-    let totalEquations = 0;
-    let answered = new Set();
-    let answers = [];
-    let difficulty = 'facil';
+  <h1>Bingo da Matemática</h1>
+  <main>
+    <!-- TELA 1: INÍCIO -->
+    <section id="inicio">
+      <h2>Quem é Você?</h2>
+      <button id="btnAluno">Aluno</button>
+      <button id="btnProfessor">Professor</button>
+    </section>
 
-    function getRangeByDifficulty(level) {
-      switch (level) {
-        case 'facil': return [4, 40]; // soma entre 2 e 20
-        case 'medio': return [20, 100];
-        case 'dificil': return [50, 200];
-        default: return [4, 40];
-      }
+    <!-- TELA 2: ESCOLHA TIPO EQUAÇÃO -->
+    <section id="tipo-equacao" class="hidden">
+      <h2>Escolha o tipo de Equação</h2>
+      <button data-tipo="1grau">Equações do 1º Grau</button>
+      <button data-tipo="2grau">Equações do 2º Grau</button>
+      <button data-tipo="misturado">Equações Mistas</button>
+    </section>
+
+    <!-- TELA 3: NOME ALUNO -->
+    <section id="nome-aluno" class="hidden">
+      <h2>Qual o seu nome?</h2>
+      <input type="text" id="input-nome" placeholder="Digite seu nome aqui" autocomplete="off" />
+      <button id="btnAvancarAluno">Avançar</button>
+    </section>
+
+    <!-- TELA 4: JOGO ALUNO -->
+    <section id="jogo-aluno" class="hidden">
+      <p id="welcome-msg"></p>
+      <button id="btn-gerar-cartela">Gerar Minha Cartela!</button>
+      <div id="cartela-numero"></div>
+      <div id="cartela"></div>
+      <div id="bingo-notification"></div>
+    </section>
+
+    <!-- TELA 5: ÁREA DO PROFESSOR -->
+    <section id="professor-area" class="hidden">
+      <h2>Área do Professor</h2>
+      <div>
+        <button id="btn-exibir-equacao" disabled>Sortear Nova Equação</button>
+        <button id="btn-gabarito" disabled>Mostrar Gabarito e Vencedores</button>
+      </div>
+      <div id="professor-equation" aria-live="polite" role="status">Aguardando sorteio...</div>
+      <div id="professor-gabarito" class="hidden"></div>
+      <div id="professor-winners" class="hidden"></div>
+    </section>
+  </main>
+
+  <audio id="audio-bingo" src="https://actions.google.com/sounds/v1/alarms/digital_watch_alarm_long.ogg" preload="auto"></audio>
+
+<script>
+(() => {
+  // --- GERAÇÃO DE DADOS DINÂMICOS --- //
+  const eq1Grau = [];
+  while (eq1Grau.length < 30) {
+    let a = Math.floor(Math.random() * 9) + 1; // a de 1 a 9
+    if (Math.random() < 0.5) a = -a; // 50% de chance de ser negativo
+    let x = Math.floor(Math.random() * 21) - 10; // resultado de -10 a 10
+    let b = Math.floor(Math.random() * 41) - 20; // b de -20 a 20
+    let c = a * x + b;
+    const bStr = b === 0 ? '' : (b > 0 ? ` + ${b}` : ` - ${Math.abs(b)}`);
+    const strEq = `${a === 1 ? '' : (a === -1 ? '-' : a)}x${bStr} = ${c}`;
+    if (!eq1Grau.some(e => e.eq === strEq)) {
+      eq1Grau.push({ eq: strEq, res: x, detal: `${a}x = ${c - b}  =>  x = ${x}` });
     }
+  }
 
-    function shuffle(array) {
-      for (let i = array.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [array[i], array[j]] = [array[j], array[i]];
-      }
-      return array;
-    }
-
-    function generateCard(level) {
-      const [min, max] = getRangeByDifficulty(level);
-      const set = new Set();
-      while (set.size < 25) {
-        const val = Math.floor(Math.random() * (max - min + 1)) + min;
-        set.add(val);
-      }
-      answers = Array.from(set);
-      return answers;
-    }
-
-    function generateEquationFromCard() {
-      const remaining = answers.filter(val => !answered.has(val));
-      const candidates = [];
-
-      for (let i = 1; i <= 100; i++) {
-        for (let j = 1; j <= 100; j++) {
-          // Soma
-          let sum = i + j;
-          if (remaining.includes(sum)) {
-            candidates.push({ eq: `${i} + ${j}`, res: sum });
-          }
-
-          // Subtração (evita resultados negativos)
-          if (i >= j) {
-            let diff = i - j;
-            if (remaining.includes(diff)) {
-              candidates.push({ eq: `${i} - ${j}`, res: diff });
-            }
-          }
-        }
-      }
-
-      if (candidates.length === 0) {
-        document.getElementById('equation').textContent = 'Fim do jogo!';
-        return;
-      }
-
-      const chosen = candidates[Math.floor(Math.random() * candidates.length)];
-      currentAnswer = chosen.res;
-      document.getElementById('equation').textContent = chosen.eq;
-    }
-
-    function renderCard() {
-      const card = document.getElementById('bingo-card');
-      card.innerHTML = '';
-      answers.forEach(num => {
-        const cell = document.createElement('div');
-        cell.className = 'cell';
-        cell.textContent = num;
-        cell.onclick = () => checkAnswer(cell, num);
-        card.appendChild(cell);
+  const eq2Grau = [];
+  while (eq2Grau.length < 30) {
+    let a = Math.random() < 0.5 ? 1 : -1; // a = 1 ou -1 para simplificar
+    let x1 = Math.floor(Math.random() * 21) - 10;
+    let x2 = Math.floor(Math.random() * 21) - 10;
+    if (x1 === x2) continue;
+    let b = -a * (x1 + x2);
+    let c = a * x1 * x2;
+    const aStr = a === 1 ? '' : '-';
+    const bStr = b === 0 ? '' : `${b > 0 ? ' + ' : ' - '}${Math.abs(b)}x`;
+    const cStr = c === 0 ? '' : `${c > 0 ? ' + ' : ' - '}${Math.abs(c)}`;
+    const strEq = `${aStr}x²${bStr}${cStr} = 0`;
+    if (!eq2Grau.some(e => e.eq === strEq)) {
+      eq2Grau.push({
+        eq: strEq,
+        res: [x1, x2].sort((n1, n2) => n1 - n2),
+        detal: `Raízes x₁=${x1}, x₂=${x2}`
       });
     }
+  }
 
-    function checkAnswer(cell, num) {
-      if (answered.has(num)) return;
-      if (num === currentAnswer) {
-        cell.classList.add('correct');
-        score++;
-        answered.add(num);
-        document.getElementById('score').textContent = score;
-        setTimeout(generateEquationFromCard, 800);
+  const cartelas = { '1grau': [], '2grau': [], 'misturado': [] };
+  function gerarCartelaNumeros() {
+    const numeros = new Set();
+    while (numeros.size < 16) {
+      numeros.add(Math.floor(Math.random() * 21) - 10); // Números de -10 a 10
+    }
+    return Array.from(numeros);
+  }
+  for (let tipo of Object.keys(cartelas)) {
+    for (let i = 0; i < 20; i++) {
+      cartelas[tipo].push(gerarCartelaNumeros());
+    }
+  }
+
+  // --- ESTADO GLOBAL DO JOGO --- //
+  let estado = {
+    usuario: null,
+    tipoEquacao: null,
+    nomeAluno: '',
+    cartelaAluno: null,
+    cartelaAlunoID: null,
+    professorEquacoesSorteadas: [],
+    professorIndexSorteio: 0,
+    cartelasVencedoras: [],
+    bingoAnunciado: false,
+  };
+
+  // --- REFERÊNCIAS DO DOM --- //
+  const sections = {
+    inicio: document.getElementById('inicio'),
+    tipoEquacao: document.getElementById('tipo-equacao'),
+    nomeAluno: document.getElementById('nome-aluno'),
+    jogoAluno: document.getElementById('jogo-aluno'),
+    professorArea: document.getElementById('professor-area'),
+  };
+  const welcomeMsg = document.getElementById('welcome-msg');
+  const btnGerarCartela = document.getElementById('btn-gerar-cartela');
+  const cartelaNumero = document.getElementById('cartela-numero');
+  const cartelaGrid = document.getElementById('cartela');
+  const bingoNotification = document.getElementById('bingo-notification');
+  const audioBingo = document.getElementById('audio-bingo');
+  const btnExibirEquacao = document.getElementById('btn-exibir-equacao');
+  const btnGabarito = document.getElementById('btn-gabarito');
+  const professorEquation = document.getElementById('professor-equation');
+  const professorGabarito = document.getElementById('professor-gabarito');
+  const professorWinners = document.getElementById('professor-winners');
+
+  // --- FUNÇÕES DE CONTROLE DE TELA --- //
+  function mostrarTela(nomeTela) {
+    for (let tela in sections) {
+      sections[tela].classList.add('hidden');
+    }
+    sections[nomeTela].classList.remove('hidden');
+  }
+
+  // --- FLUXO DO JOGO --- //
+  document.getElementById('btnAluno').onclick = () => {
+    estado.usuario = 'aluno';
+    mostrarTela('tipoEquacao');
+  };
+
+  document.getElementById('btnProfessor').onclick = () => {
+    const senha = prompt("Digite a senha do professor:");
+    if (senha === 'bingodamatematica') {
+      estado.usuario = 'professor';
+      mostrarTela('tipoEquacao');
+    } else {
+      alert('Senha incorreta!');
+    }
+  };
+
+  document.querySelectorAll('#tipo-equacao button').forEach(btn => {
+    btn.onclick = () => {
+      estado.tipoEquacao = btn.dataset.tipo;
+      if (estado.usuario === 'aluno') {
+        mostrarTela('nomeAluno');
       } else {
-        cell.classList.add('wrong');
-        setTimeout(() => cell.classList.remove('wrong'), 500);
+        iniciarProfessor();
+      }
+    };
+  });
+
+  document.getElementById('btnAvancarAluno').onclick = () => {
+    const nome = document.getElementById('input-nome').value.trim();
+    if (!nome) {
+      alert("Por favor, digite seu nome!");
+      return;
+    }
+    estado.nomeAluno = nome;
+    iniciarJogoAluno();
+  };
+
+  // --- LÓGICA DO ALUNO --- //
+  function iniciarJogoAluno() {
+    mostrarTela('jogoAluno');
+    welcomeMsg.textContent = `Olá, ${estado.nomeAluno}! Resolva a equação que seu professor exibir e marque o resultado na sua cartela. Complete uma linha, coluna ou diagonal para gritar BINGO!`;
+    btnGerarCartela.disabled = false;
+    btnGerarCartela.style.display = 'inline-block';
+    cartelaGrid.innerHTML = '';
+    cartelaNumero.textContent = '';
+    bingoNotification.textContent = '';
+    estado.bingoAnunciado = false;
+  }
+
+  btnGerarCartela.onclick = () => {
+    const listaCartelas = cartelas[estado.tipoEquacao];
+    const idCartela = Math.floor(Math.random() * listaCartelas.length);
+    estado.cartelaAluno = listaCartelas[idCartela];
+    estado.cartelaAlunoID = idCartela + 1; // ID 1-20
+
+    cartelaGrid.innerHTML = '';
+    estado.cartelaAluno.forEach(valor => {
+      const cell = document.createElement('div');
+      cell.classList.add('cell');
+      cell.textContent = valor;
+      cell.onclick = () => {
+        if (cell.classList.contains('marked') || estado.bingoAnunciado) return;
+        cell.classList.add('marked');
+        verificarBingoAluno();
+      };
+      cartelaGrid.appendChild(cell);
+    });
+
+    cartelaNumero.textContent = `Sua cartela é a de nº ${estado.cartelaAlunoID}`;
+    btnGerarCartela.style.display = 'none';
+  };
+
+  function verificarBingoAluno() {
+    const cells = [...cartelaGrid.children];
+    const eMarcado = (index) => cells[index].classList.contains('marked');
+    const vitorias = [
+      [0,1,2,3], [4,5,6,7], [8,9,10,11], [12,13,14,15], // Linhas
+      [0,4,8,12], [1,5,9,13], [2,6,10,14], [3,7,11,15], // Colunas
+      [0,5,10,15], [3,6,9,12] // Diagonais
+    ];
+    for (const vitoria of vitorias) {
+      if (vitoria.every(eMarcado)) {
+        anunciarBingo();
+        break;
       }
     }
+  }
 
-    function startGame() {
-      score = 0;
-      answered.clear();
-      difficulty = document.getElementById('difficulty').value;
-      document.getElementById('score').textContent = score;
-      answers = generateCard(difficulty);
-      document.getElementById('total').textContent = answers.length;
-      renderCard();
-      generateEquationFromCard();
-    }
+  function anunciarBingo() {
+    if (estado.bingoAnunciado) return;
+    estado.bingoAnunciado = true;
+    bingoNotification.innerHTML = "🎉 BINGO! 🎉<br/>Você venceu!";
+    audioBingo.play();
+  }
 
-    function restartGame() {
-      startGame();
+  // --- LÓGICA DO PROFESSOR --- //
+  function iniciarProfessor() {
+    mostrarTela('professorArea');
+    btnExibirEquacao.disabled = false;
+    btnGabarito.disabled = true;
+    professorGabarito.classList.add('hidden');
+    professorWinners.classList.add('hidden');
+  }
+
+  btnExibirEquacao.onclick = () => {
+    let equacoesDisponiveis;
+    if (estado.tipoEquacao === '1grau') equacoesDisponiveis = eq1Grau;
+    else if (estado.tipoEquacao === '2grau') equacoesDisponiveis = eq2Grau;
+    else equacoesDisponiveis = [...eq1Grau, ...eq2Grau];
+
+    const jaSorteadas = new Set(estado.professorEquacoesSorteadas.map(e => e.eq));
+    const naoSorteadas = equacoesDisponiveis.filter(e => !jaSorteadas.has(e.eq));
+    if (naoSorteadas.length === 0) {
+      professorEquation.textContent = 'Todas as equações foram sorteadas!';
+      btnExibirEquacao.disabled = true;
+      return;
     }
-  </script></body>
+    const sorteada = naoSorteadas[Math.floor(Math.random() * naoSorteadas.length)];
+    estado.professorEquacoesSorteadas.push({ ...sorteada, tipo: eq1Grau.includes(sorteada) ? '1grau' : '2grau' });
+    estado.professorIndexSorteio++;
+
+    professorEquation.textContent = `Equação ${estado.professorIndexSorteio}: ${sorteada.eq}`;
+    btnGabarito.disabled = false;
+    professorGabarito.classList.add('hidden');
+    professorWinners.classList.add('hidden');
+  };
+
+  btnGabarito.onclick = () => {
+    // Montar texto do gabarito
+    let gabaritoTxt = "Gabarito das equações sorteadas:\n\n";
+    estado.professorEquacoesSorteadas.forEach((e, i) => {
+      const resTxt = Array.isArray(e.res) ? e.res.join(', ') : e.res;
+      gabaritoTxt += `${i+1}) ${e.eq}\n   Resposta(s): ${resTxt}\n   (${e.detal})\n\n`;
+    });
+    professorGabarito.textContent = gabaritoTxt;
+    professorGabarito.classList.remove('hidden');
+
+    // Verificar cartelas vencedoras
+    const vencedoras = verificarCartelasVencedoras();
+    if (vencedoras.length === 0) {
+      professorWinners.textContent = "Nenhuma cartela fez BINGO ainda.";
+    } else {
+      professorWinners.textContent = "Cartelas com BINGO: Nº " + vencedoras.join(', Nº ');
+    }
+    professorWinners.classList.remove('hidden');
+  };
+
+  function verificarCartelasVencedoras() {
+    const respostasSorteadas = new Set();
+    estado.professorEquacoesSorteadas.forEach(eq => {
+      Array.isArray(eq.res) ? eq.res.forEach(r => respostasSorteadas.add(r)) : respostasSorteadas.add(eq.res);
+    });
+
+    const vitorias = [
+      [0,1,2,3], [4,5,6,7], [8,9,10,11], [12,13,14,15],
+      [0,4,8,12], [1,5,9,13], [2,6,10,14], [3,7,11,15],
+      [0,5,10,15], [3,6,9,12]
+    ];
+    let cartelasVencedoras = [];
+    const listaCartelas = cartelas[estado.tipoEquacao];
+
+    listaCartelas.forEach((cartela, idx) => {
+      for (const vitoria of vitorias) {
+        if (vitoria.every(pos => respostasSorteadas.has(cartela[pos]))) {
+          cartelasVencedoras.push(idx + 1);
+          break; // Vai para a próxima cartela
+        }
+      }
+    });
+    return cartelasVencedoras;
+  }
+
+  // --- INICIALIZAÇÃO --- //
+  mostrarTela('inicio');
+})();
+</script>
+</body>
 </html>

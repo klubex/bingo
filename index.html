@@ -31,6 +31,9 @@
       from { opacity: 0; transform: translateY(10px); }
       to { opacity: 1; transform: translateY(0); }
     }
+    html {
+        font-size: 16px; /* Base para o cálculo de REM */
+    }
     body {
       font-family: var(--font-family-main);
       background: var(--color-background);
@@ -38,17 +41,19 @@
       display: flex; flex-direction: column;
       align-items: center; min-height: 100vh;
       color: var(--color-text-primary);
+      -webkit-tap-highlight-color: transparent; /* Remove o brilho azul no toque em mobile */
     }
     h1 {
       background-color: var(--color-primary);
       color: white; width: 100%; margin: 0;
-      padding: 24px 0; font-weight: 700;
+      padding: 1.5rem 1rem; font-weight: 700;
       text-align: center; box-shadow: var(--shadow-md);
       user-select: none; font-size: 2.25rem;
     }
     main {
-      max-width: 900px; width: 95%;
-      margin-top: 20px; /* Reduzido para acomodar o botão de voltar */
+      max-width: 900px; width: 100%;
+      padding: 0 1rem; /* Garante margens laterais em telas pequenas */
+      margin-top: 1.5rem;
       flex-grow: 1; text-align: center;
       position: relative;
     }
@@ -56,9 +61,9 @@
     button {
       background-color: var(--color-primary);
       border: none; border-radius: var(--border-radius);
-      color: white; padding: 14px 28px;
+      color: white; padding: 0.8em 1.5em; /* Usa EM para escalar com a fonte */
       font-size: 1.1rem; font-weight: 600;
-      font-family: inherit; margin: 8px; cursor: pointer;
+      font-family: inherit; margin: 0.5rem; cursor: pointer;
       transition: all var(--transition-speed) ease;
       user-select: none; box-shadow: var(--shadow-sm);
     }
@@ -71,58 +76,59 @@
     }
     button:disabled {
       background-color: #94a3b8; cursor: not-allowed;
+      transform: none; box-shadow: var(--shadow-sm);
     }
-    /* --- ESTILO DO BOTÃO DE VOLTAR - NOVO --- */
     .btn-voltar {
         background-color: transparent;
         color: var(--color-text-secondary);
         border: 2px solid var(--color-border);
-        padding: 8px 16px;
+        padding: 0.5em 1em;
         font-size: 0.9rem;
-        margin-bottom: 20px;
+        margin-bottom: 1.25rem;
+        display: inline-block; /* Evita que ocupe a linha toda */
+        float: left; /* Alinha à esquerda */
     }
     .btn-voltar:hover:not(:disabled) {
         background-color: var(--color-background);
         border-color: var(--color-text-secondary);
         color: var(--color-text-primary);
-        transform: translateY(-1px);
-        box-shadow: var(--shadow-sm);
     }
-    input[type="text"], input[type="password"] {
+    input[type="text"] {
       font-size: 1.1rem; font-family: inherit;
-      padding: 14px; width: 100%; max-width: 350px;
-      margin: 10px 0 20px 0; border: 2px solid var(--color-border);
+      padding: 0.8rem 1rem; width: 100%; max-width: 350px;
+      margin: 0.5rem 0 1.25rem 0; border: 2px solid var(--color-border);
       border-radius: var(--border-radius); outline: none;
       transition: all var(--transition-speed) ease;
       background-color: var(--color-background);
     }
-    input[type="text"]:focus, input[type="password"]:focus {
+    input[type="text"]:focus {
       border-color: var(--color-primary);
       box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.2);
       background-color: var(--color-surface);
     }
-    #inicio, #tipo-equacao, #nome-aluno, #jogo-aluno, #professor-area {
+    .card {
       background: var(--color-surface);
-      border-radius: 16px; padding: 30px 40px;
-      box-shadow: var(--shadow-lg); margin-bottom: 40px;
+      border-radius: 16px; padding: 2rem 2.5rem;
+      box-shadow: var(--shadow-lg); margin-bottom: 2.5rem;
       animation: fadeIn 0.5s ease-out forwards;
+      clear: both; /* Garante que o card fique abaixo do botão 'voltar' flutuante */
     }
     h2 {
       font-weight: 700; font-size: 1.75rem;
-      margin-top: 0; margin-bottom: 30px;
+      margin-top: 0; margin-bottom: 1.8rem;
       color: var(--color-text-primary);
     }
     #cartela {
       display: grid; grid-template-columns: repeat(4, 1fr);
-      gap: 15px; max-width: 400px;
-      margin: 25px auto; user-select: none;
+      gap: 1rem; max-width: 400px;
+      margin: 1.5rem auto; user-select: none;
     }
     .cell {
       background-color: #f1f5f9; aspect-ratio: 1 / 1;
       display: flex; align-items: center; justify-content: center;
       border-radius: var(--border-radius); font-size: 1.75rem;
       font-weight: 700; cursor: pointer;
-      border: 2px solid var(--color-border);
+      border: 2px solid transparent;
       transition: all 0.2s ease-in-out; user-select: none;
     }
     .cell:not(.marked):hover {
@@ -134,85 +140,103 @@
       border-color: var(--color-accent-dark); transform: scale(1.05);
       box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4); cursor: default;
     }
-    #bingo-notification, #cartela-numero, #welcome-msg, #professor-equation, #professor-gabarito, #professor-winners {
-        user-select: none; /* Aplicado a mais elementos para consistência */
+    #bingo-notification, #cartela-numero, #welcome-msg, #professor-gabarito, #professor-winners {
+        user-select: none;
     }
     #professor-equation { user-select: text; }
     #bingo-notification {
-      margin-top: 25px; font-weight: 700;
+      margin-top: 1.5rem; font-weight: 700;
       font-size: 2rem; color: var(--color-accent-dark);
-      min-height: 45px;
+      min-height: 2.5rem;
     }
     #cartela-numero {
-      font-style: italic; margin-top: 10px;
+      font-style: italic; margin-top: 0.5rem;
       font-weight: 600; color: var(--color-text-secondary);
     }
     #welcome-msg {
-      max-width: 600px; margin: 0 auto 25px auto;
+      max-width: 600px; margin: 0 auto 1.5rem auto;
       line-height: 1.7; color: var(--color-text-secondary);
       font-size: 1.1rem;
     }
     #professor-equation {
       font-size: 2rem; font-weight: 700;
-      margin: 25px 0; padding: 20px;
+      margin: 1.5rem 0; padding: 1.25rem;
       background-color: #eef2ff;
       border-radius: var(--border-radius);
       color: var(--color-primary-dark);
       border: 2px dashed var(--color-primary-light);
+      word-wrap: break-word; /* Garante que equações longas não quebrem o layout */
     }
     #professor-gabarito {
-      margin-top: 25px; max-height: 300px;
+      margin-top: 1.5rem; max-height: 300px;
       overflow-y: auto; border: 1px solid var(--color-border);
-      padding: 20px; border-radius: var(--border-radius);
+      padding: 1.25rem; border-radius: var(--border-radius);
       background: var(--color-background);
       font-family: "SF Mono", "Fira Code", "Source Code Pro", monospace;
       font-size: 1rem; white-space: pre-wrap;
       text-align: left;
     }
     #professor-winners {
-      margin-top: 20px; font-weight: 700;
+      margin-top: 1.25rem; font-weight: 700;
       color: var(--color-accent-dark); font-size: 1.3rem;
     }
-    @media (max-width: 600px) {
-      h1 { font-size: 1.8rem; }
-      main { margin-top: 20px; }
-      #cartela { gap: 10px; }
-      .cell { font-size: 1.4rem; }
-      button { width: 100%; margin-left: 0; margin-right: 0; }
-      #inicio, #tipo-equacao, #nome-aluno, #jogo-aluno, #professor-area { padding: 25px; }
-      h2 { font-size: 1.5rem; }
-      .btn-voltar { width: auto; float: left; } /* Botão de voltar não ocupa a largura toda */
+
+    /* --- MEDIA QUERY PARA MOBILE - OTIMIZAÇÕES PRINCIPAIS --- */
+    @media (max-width: 768px) {
+        /* 1. Ajusta a fonte base. Todos os 'rem' escalarão a partir daqui. */
+        html {
+            font-size: 14px;
+        }
+        /* 2. Reduz o preenchimento dos cards para dar mais espaço ao conteúdo. */
+        .card {
+            padding: 1.5rem 1.25rem;
+        }
+        /* 3. Garante que botões (exceto o de voltar) ocupem a largura toda para facilitar o toque. */
+        .card button:not(.btn-voltar) {
+            width: 100%;
+            margin-left: 0;
+            margin-right: 0;
+        }
+        /* 4. Ajusta o gap da cartela para telas menores. */
+        #cartela {
+            gap: 0.5rem;
+        }
+        /* 5. A interação de 'hover' não existe em mobile, então removemos o efeito de levantar. */
+        .cell:not(.marked):hover {
+            transform: none;
+            box-shadow: none;
+        }
+        .cell:not(.marked):active { /* Adiciona um feedback visual para o toque */
+             transform: scale(0.95);
+        }
     }
   </style>
 </head>
 <body>
   <h1>Bingo da Matemática</h1>
   <main>
-    <!-- BOTÃO VOLTAR AO INÍCIO - NOVO -->
     <button id="btnVoltarInicio" class="btn-voltar hidden">← Voltar ao Início</button>
     
-    <!-- TELA 1: INÍCIO -->
-    <section id="inicio">
+    <section id="inicio" class="card">
       <h2>Quem é Você?</h2>
       <button id="btnAluno">Sou Aluno</button>
       <button id="btnProfessor">Sou Professor</button>
     </section>
     
-    <!-- DEMAIS TELAS... -->
-    <section id="tipo-equacao" class="hidden">
+    <section id="tipo-equacao" class="card hidden">
       <h2>Escolha o tipo de Equação</h2>
       <button data-tipo="1grau">Equações do 1º Grau</button>
       <button data-tipo="2grau">Equações do 2º Grau</button>
       <button data-tipo="misturado">Equações Mistas</button>
     </section>
 
-    <section id="nome-aluno" class="hidden">
+    <section id="nome-aluno" class="card hidden">
       <h2>Qual o seu nome?</h2>
       <input type="text" id="input-nome" placeholder="Digite seu nome aqui" autocomplete="off" />
       <button id="btnAvancarAluno">Avançar</button>
     </section>
 
-    <section id="jogo-aluno" class="hidden">
+    <section id="jogo-aluno" class="card hidden">
       <p id="welcome-msg"></p>
       <button id="btn-gerar-cartela">Gerar Minha Cartela!</button>
       <div id="cartela-numero"></div>
@@ -220,7 +244,7 @@
       <div id="bingo-notification"></div>
     </section>
 
-    <section id="professor-area" class="hidden">
+    <section id="professor-area" class="card hidden">
       <h2>Área do Professor</h2>
       <div>
         <button id="btn-exibir-equacao" disabled>Sortear Nova Equação</button>
@@ -235,8 +259,8 @@
   <audio id="audio-bingo" src="https://actions.google.com/sounds/v1/alarms/digital_watch_alarm_long.ogg" preload="auto"></audio>
 
 <script>
+// O CÓDIGO JAVASCRIPT PERMANECE IDÊNTICO, POIS A LÓGICA DO JOGO NÃO MUDA.
 (() => {
-  // A lógica de geração de dados permanece a mesma...
   const eq1Grau = [];
   while (eq1Grau.length < 30) {
     let a = Math.floor(Math.random() * 9) + 1;
@@ -286,7 +310,6 @@
     }
   }
 
-  // Objeto de estado inicial
   const getEstadoInicial = () => ({
     usuario: null, tipoEquacao: null, nomeAluno: '',
     cartelaAluno: null, cartelaAlunoID: null,
@@ -296,7 +319,6 @@
 
   let estado = getEstadoInicial();
 
-  // --- REFERÊNCIAS DO DOM --- //
   const sections = {
     inicio: document.getElementById('inicio'),
     tipoEquacao: document.getElementById('tipo-equacao'),
@@ -304,7 +326,7 @@
     jogoAluno: document.getElementById('jogo-aluno'),
     professorArea: document.getElementById('professor-area'),
   };
-  const btnVoltarInicio = document.getElementById('btnVoltarInicio'); // NOVO
+  const btnVoltarInicio = document.getElementById('btnVoltarInicio');
   const welcomeMsg = document.getElementById('welcome-msg');
   const btnGerarCartela = document.getElementById('btn-gerar-cartela');
   const cartelaNumero = document.getElementById('cartela-numero');
@@ -317,12 +339,10 @@
   const professorGabarito = document.getElementById('professor-gabarito');
   const professorWinners = document.getElementById('professor-winners');
 
-  // --- FUNÇÕES DE CONTROLE DE TELA (MODIFICADA) --- //
   function mostrarTela(nomeTela) {
     Object.values(sections).forEach(s => s.classList.add('hidden'));
     sections[nomeTela].classList.remove('hidden');
     
-    // Gerencia a visibilidade do botão de voltar
     if (nomeTela === 'inicio') {
       btnVoltarInicio.classList.add('hidden');
     } else {
@@ -330,11 +350,8 @@
     }
   }
   
-  // --- FUNÇÃO PARA RESETAR O JOGO (NOVA) --- //
   function resetarParaOInicio() {
       estado = getEstadoInicial();
-      
-      // Limpar campos e elementos da UI
       document.getElementById('input-nome').value = '';
       cartelaGrid.innerHTML = '';
       cartelaNumero.textContent = '';
@@ -343,13 +360,10 @@
       professorEquation.textContent = 'Aguardando sorteio...';
       professorGabarito.classList.add('hidden');
       professorWinners.classList.add('hidden');
-      
       mostrarTela('inicio');
   }
 
-
-  // --- FLUXO DO JOGO --- //
-  btnVoltarInicio.onclick = resetarParaOInicio; // NOVO
+  btnVoltarInicio.onclick = resetarParaOInicio;
 
   document.getElementById('btnAluno').onclick = () => {
     estado.usuario = 'aluno';
@@ -394,7 +408,6 @@
     }
   });
 
-  // --- LÓGICA DO ALUNO --- //
   function iniciarJogoAluno() {
     mostrarTela('jogoAluno');
     welcomeMsg.textContent = `Olá, ${estado.nomeAluno}! Resolva a equação que seu professor exibir e marque o resultado na sua cartela. Complete uma linha, coluna ou diagonal para gritar BINGO!`;
@@ -433,9 +446,9 @@
     const cells = [...cartelaGrid.children];
     const eMarcado = (index) => cells[index].classList.contains('marked');
     const vitorias = [
-      [0,1,2,3], [4,5,6,7], [8,9,10,11], [12,13,14,15], // Linhas
-      [0,4,8,12], [1,5,9,13], [2,6,10,14], [3,7,11,15], // Colunas
-      [0,5,10,15], [3,6,9,12] // Diagonais
+      [0,1,2,3], [4,5,6,7], [8,9,10,11], [12,13,14,15],
+      [0,4,8,12], [1,5,9,13], [2,6,10,14], [3,7,11,15],
+      [0,5,10,15], [3,6,9,12]
     ];
     for (const vitoria of vitorias) {
       if (vitoria.every(eMarcado)) {
@@ -452,7 +465,6 @@
     audioBingo.play();
   }
 
-  // --- LÓGICA DO PROFESSOR --- //
   function iniciarProfessor() {
     mostrarTela('professorArea');
     btnExibirEquacao.disabled = false;
@@ -461,7 +473,6 @@
     professorWinners.classList.add('hidden');
   }
 
-  // O restante do JavaScript (lógica do professor, etc.) permanece o mesmo...
   btnExibirEquacao.onclick = () => {
     let equacoesDisponiveis;
     if (estado.tipoEquacao === '1grau') equacoesDisponiveis = eq1Grau;
@@ -529,7 +540,6 @@
     return cartelasVencedoras;
   }
 
-  // --- INICIALIZAÇÃO --- //
   mostrarTela('inicio');
 })();
 </script>

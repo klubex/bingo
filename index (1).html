@@ -1,5 +1,4 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
+<!DOCTYPE html><html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -56,19 +55,11 @@
     </select>
     <button onclick="startGame()">Iniciar</button>
     <button onclick="restartGame()">Reiniciar</button>
-  </div>
-
-  <div class="equation">
+  </div>  <div class="equation">
     <h2 id="equation"></h2>
-  </div>
-
-  <div id="bingo-card"></div>
-
-  <div class="score">
+  </div>  <div id="bingo-card"></div>  <div class="score">
     <p>Acertos: <span id="score">0</span> / <span id="total">0</span></p>
-  </div>
-
-  <script>
+  </div>  <script>
     let currentAnswer = null;
     let score = 0;
     let totalEquations = 0;
@@ -78,7 +69,7 @@
 
     function getRangeByDifficulty(level) {
       switch (level) {
-        case 'facil': return [4, 30];
+        case 'facil': return [4, 40]; // soma entre 2 e 20
         case 'medio': return [20, 100];
         case 'dificil': return [50, 200];
         default: return [4, 40];
@@ -176,6 +167,5 @@
     function restartGame() {
       startGame();
     }
-  </script>
-</body>
+  </script></body>
 </html>

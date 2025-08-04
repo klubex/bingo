@@ -32,7 +32,7 @@
       to { opacity: 1; transform: translateY(0); }
     }
     html {
-        font-size: 16px; /* Base para o cálculo de REM */
+        font-size: 16px;
     }
     body {
       font-family: var(--font-family-main);
@@ -41,7 +41,7 @@
       display: flex; flex-direction: column;
       align-items: center; min-height: 100vh;
       color: var(--color-text-primary);
-      -webkit-tap-highlight-color: transparent; /* Remove o brilho azul no toque em mobile */
+      -webkit-tap-highlight-color: transparent;
     }
     h1 {
       background-color: var(--color-primary);
@@ -52,7 +52,7 @@
     }
     main {
       max-width: 900px; width: 100%;
-      padding: 0 1rem; /* Garante margens laterais em telas pequenas */
+      padding: 0 1rem;
       margin-top: 1.5rem;
       flex-grow: 1; text-align: center;
       position: relative;
@@ -61,7 +61,7 @@
     button {
       background-color: var(--color-primary);
       border: none; border-radius: var(--border-radius);
-      color: white; padding: 0.8em 1.5em; /* Usa EM para escalar com a fonte */
+      color: white; padding: 0.8em 1.5em;
       font-size: 1.1rem; font-weight: 600;
       font-family: inherit; margin: 0.5rem; cursor: pointer;
       transition: all var(--transition-speed) ease;
@@ -85,13 +85,19 @@
         padding: 0.5em 1em;
         font-size: 0.9rem;
         margin-bottom: 1.25rem;
-        display: inline-block; /* Evita que ocupe a linha toda */
-        float: left; /* Alinha à esquerda */
+        display: inline-block;
+        float: left;
     }
     .btn-voltar:hover:not(:disabled) {
         background-color: var(--color-background);
         border-color: var(--color-text-secondary);
         color: var(--color-text-primary);
+    }
+    .btn-secondary {
+        background-color: var(--color-text-secondary);
+    }
+    .btn-secondary:hover:not(:disabled) {
+        background-color: var(--color-text-primary);
     }
     input[type="text"] {
       font-size: 1.1rem; font-family: inherit;
@@ -111,7 +117,7 @@
       border-radius: 16px; padding: 2rem 2.5rem;
       box-shadow: var(--shadow-lg); margin-bottom: 2.5rem;
       animation: fadeIn 0.5s ease-out forwards;
-      clear: both; /* Garante que o card fique abaixo do botão 'voltar' flutuante */
+      clear: both;
     }
     h2 {
       font-weight: 700; font-size: 1.75rem;
@@ -165,7 +171,7 @@
       border-radius: var(--border-radius);
       color: var(--color-primary-dark);
       border: 2px dashed var(--color-primary-light);
-      word-wrap: break-word; /* Garante que equações longas não quebrem o layout */
+      word-wrap: break-word;
     }
     #professor-gabarito {
       margin-top: 1.5rem; max-height: 300px;
@@ -181,32 +187,20 @@
       color: var(--color-accent-dark); font-size: 1.3rem;
     }
 
-    /* --- MEDIA QUERY PARA MOBILE - OTIMIZAÇÕES PRINCIPAIS --- */
     @media (max-width: 768px) {
-        /* 1. Ajusta a fonte base. Todos os 'rem' escalarão a partir daqui. */
-        html {
-            font-size: 14px;
-        }
-        /* 2. Reduz o preenchimento dos cards para dar mais espaço ao conteúdo. */
-        .card {
-            padding: 1.5rem 1.25rem;
-        }
-        /* 3. Garante que botões (exceto o de voltar) ocupem a largura toda para facilitar o toque. */
+        html { font-size: 14px; }
+        .card { padding: 1.5rem 1.25rem; }
         .card button:not(.btn-voltar) {
             width: 100%;
             margin-left: 0;
             margin-right: 0;
         }
-        /* 4. Ajusta o gap da cartela para telas menores. */
-        #cartela {
-            gap: 0.5rem;
-        }
-        /* 5. A interação de 'hover' não existe em mobile, então removemos o efeito de levantar. */
+        #cartela { gap: 0.5rem; }
         .cell:not(.marked):hover {
             transform: none;
             box-shadow: none;
         }
-        .cell:not(.marked):active { /* Adiciona um feedback visual para o toque */
+        .cell:not(.marked):active {
              transform: scale(0.95);
         }
     }
@@ -238,7 +232,10 @@
 
     <section id="jogo-aluno" class="card hidden">
       <p id="welcome-msg"></p>
-      <button id="btn-gerar-cartela">Gerar Minha Cartela!</button>
+      <div>
+        <button id="btn-gerar-cartela">Gerar Minha Cartela!</button>
+        <button id="btn-reiniciar-aluno" class="btn-secondary hidden">Jogar Novamente</button>
+      </div>
       <div id="cartela-numero"></div>
       <div id="cartela"></div>
       <div id="bingo-notification"></div>
@@ -247,8 +244,9 @@
     <section id="professor-area" class="card hidden">
       <h2>Área do Professor</h2>
       <div>
-        <button id="btn-exibir-equacao" disabled>Sortear Nova Equação</button>
-        <button id="btn-gabarito" disabled>Mostrar Gabarito e Vencedores</button>
+        <button id="btn-exibir-equacao">Sortear Nova Equação</button>
+        <button id="btn-gabarito">Mostrar Gabarito e Vencedores</button>
+        <button id="btn-reiniciar-professor" class="btn-secondary">Nova Rodada</button>
       </div>
       <div id="professor-equation" aria-live="polite" role="status">Aguardando sorteio...</div>
       <div id="professor-gabarito" class="hidden"></div>
@@ -256,11 +254,11 @@
     </section>
   </main>
 
-  <audio id="audio-bingo" src="https://actions.google.com/sounds/v1/alarms/digital_watch_alarm_long.ogg" preload="auto"></audio>
+ <audio id="audio-bingo" src="https://actions.google.com/sounds/v1/notifications/notification_simple.ogg" preload="auto"></audio>
 
 <script>
-// O CÓDIGO JAVASCRIPT PERMANECE IDÊNTICO, POIS A LÓGICA DO JOGO NÃO MUDA.
 (() => {
+  // --- BANCO DE DADOS INTERNO ---
   const eq1Grau = [];
   while (eq1Grau.length < 30) {
     let a = Math.floor(Math.random() * 9) + 1;
@@ -288,11 +286,7 @@
     const cStr = c === 0 ? '' : `${c > 0 ? ' + ' : ' - '}${Math.abs(c)}`;
     const strEq = `${aStr}x²${bStr}${cStr} = 0`;
     if (!eq2Grau.some(e => e.eq === strEq)) {
-      eq2Grau.push({
-        eq: strEq,
-        res: [x1, x2].sort((n1, n2) => n1 - n2),
-        detal: `Raízes x₁=${x1}, x₂=${x2}`
-      });
+      eq2Grau.push({ eq: strEq, res: [x1, x2].sort((n1, n2) => n1 - n2), detal: `Raízes x₁=${x1}, x₂=${x2}` });
     }
   }
 
@@ -310,15 +304,16 @@
     }
   }
 
+  // --- GESTÃO DE ESTADO ---
   const getEstadoInicial = () => ({
     usuario: null, tipoEquacao: null, nomeAluno: '',
     cartelaAluno: null, cartelaAlunoID: null,
     professorEquacoesSorteadas: [], professorIndexSorteio: 0,
-    cartelasVencedoras: [], bingoAnunciado: false,
+    bingoAnunciado: false,
   });
-
   let estado = getEstadoInicial();
 
+  // --- ELEMENTOS DO DOM ---
   const sections = {
     inicio: document.getElementById('inicio'),
     tipoEquacao: document.getElementById('tipo-equacao'),
@@ -329,37 +324,30 @@
   const btnVoltarInicio = document.getElementById('btnVoltarInicio');
   const welcomeMsg = document.getElementById('welcome-msg');
   const btnGerarCartela = document.getElementById('btn-gerar-cartela');
+  const btnReiniciarAluno = document.getElementById('btn-reiniciar-aluno');
   const cartelaNumero = document.getElementById('cartela-numero');
   const cartelaGrid = document.getElementById('cartela');
   const bingoNotification = document.getElementById('bingo-notification');
   const audioBingo = document.getElementById('audio-bingo');
   const btnExibirEquacao = document.getElementById('btn-exibir-equacao');
   const btnGabarito = document.getElementById('btn-gabarito');
+  const btnReiniciarProfessor = document.getElementById('btn-reiniciar-professor');
   const professorEquation = document.getElementById('professor-equation');
   const professorGabarito = document.getElementById('professor-gabarito');
   const professorWinners = document.getElementById('professor-winners');
 
+  // --- CONTROLE DE NAVEGAÇÃO E FLUXO ---
   function mostrarTela(nomeTela) {
     Object.values(sections).forEach(s => s.classList.add('hidden'));
     sections[nomeTela].classList.remove('hidden');
-    
-    if (nomeTela === 'inicio') {
-      btnVoltarInicio.classList.add('hidden');
-    } else {
-      btnVoltarInicio.classList.remove('hidden');
-    }
+    btnVoltarInicio.classList.toggle('hidden', nomeTela === 'inicio');
   }
-  
+
   function resetarParaOInicio() {
       estado = getEstadoInicial();
       document.getElementById('input-nome').value = '';
-      cartelaGrid.innerHTML = '';
-      cartelaNumero.textContent = '';
-      bingoNotification.textContent = '';
-      btnGerarCartela.style.display = 'inline-block';
-      professorEquation.textContent = 'Aguardando sorteio...';
-      professorGabarito.classList.add('hidden');
-      professorWinners.classList.add('hidden');
+      resetarJogoAluno();
+      resetarJogoProfessor();
       mostrarTela('inicio');
   }
 
@@ -391,6 +379,24 @@
       }
     };
   });
+  
+  // --- LÓGICA DO JOGO: ALUNO ---
+  function resetarJogoAluno() {
+    cartelaGrid.innerHTML = '';
+    cartelaNumero.textContent = '';
+    bingoNotification.textContent = '';
+    btnGerarCartela.style.display = 'inline-block';
+    btnReiniciarAluno.classList.add('hidden');
+    estado.bingoAnunciado = false;
+  }
+  
+  function iniciarJogoAluno() {
+    mostrarTela('jogoAluno');
+    welcomeMsg.textContent = `Olá, ${estado.nomeAluno}! Resolva a equação do professor e marque o resultado na sua cartela. Complete uma linha, coluna ou diagonal para gritar BINGO!`;
+    resetarJogoAluno();
+  }
+  
+  btnReiniciarAluno.onclick = iniciarJogoAluno;
 
   document.getElementById('btnAvancarAluno').onclick = () => {
     const nome = document.getElementById('input-nome').value.trim();
@@ -403,21 +409,8 @@
   };
   
   document.getElementById('input-nome').addEventListener('keyup', (event) => {
-    if (event.key === 'Enter') {
-        document.getElementById('btnAvancarAluno').click();
-    }
+    if (event.key === 'Enter') document.getElementById('btnAvancarAluno').click();
   });
-
-  function iniciarJogoAluno() {
-    mostrarTela('jogoAluno');
-    welcomeMsg.textContent = `Olá, ${estado.nomeAluno}! Resolva a equação que seu professor exibir e marque o resultado na sua cartela. Complete uma linha, coluna ou diagonal para gritar BINGO!`;
-    btnGerarCartela.disabled = false;
-    btnGerarCartela.style.display = 'inline-block';
-    cartelaGrid.innerHTML = '';
-    cartelaNumero.textContent = '';
-    bingoNotification.textContent = '';
-    estado.bingoAnunciado = false;
-  }
 
   btnGerarCartela.onclick = () => {
     const listaCartelas = cartelas[estado.tipoEquacao];
@@ -440,15 +433,16 @@
 
     cartelaNumero.textContent = `Sua cartela é a de nº ${estado.cartelaAlunoID}`;
     btnGerarCartela.style.display = 'none';
+    btnReiniciarAluno.classList.remove('hidden');
   };
 
   function verificarBingoAluno() {
     const cells = [...cartelaGrid.children];
     const eMarcado = (index) => cells[index].classList.contains('marked');
     const vitorias = [
-      [0,1,2,3], [4,5,6,7], [8,9,10,11], [12,13,14,15],
-      [0,4,8,12], [1,5,9,13], [2,6,10,14], [3,7,11,15],
-      [0,5,10,15], [3,6,9,12]
+      [0,1,2,3], [4,5,6,7], [8,9,10,11], [12,13,14,15], // Linhas
+      [0,4,8,12], [1,5,9,13], [2,6,10,14], [3,7,11,15], // Colunas
+      [0,5,10,15], [3,6,9,12] // Diagonais
     ];
     for (const vitoria of vitorias) {
       if (vitoria.every(eMarcado)) {
@@ -465,13 +459,25 @@
     audioBingo.play();
   }
 
-  function iniciarProfessor() {
-    mostrarTela('professorArea');
-    btnExibirEquacao.disabled = false;
-    btnGabarito.disabled = true;
+  // --- LÓGICA DO JOGO: PROFESSOR ---
+  function resetarJogoProfessor() {
+    estado.professorEquacoesSorteadas = [];
+    estado.professorIndexSorteio = 0;
+    
+    professorEquation.textContent = 'Aguardando sorteio...';
     professorGabarito.classList.add('hidden');
     professorWinners.classList.add('hidden');
+    
+    btnExibirEquacao.disabled = false;
+    btnGabarito.disabled = true;
   }
+
+  function iniciarProfessor() {
+    mostrarTela('professorArea');
+    resetarJogoProfessor();
+  }
+
+  btnReiniciarProfessor.onclick = resetarJogoProfessor;
 
   btnExibirEquacao.onclick = () => {
     let equacoesDisponiveis;
@@ -488,7 +494,7 @@
       return;
     }
     const sorteada = naoSorteadas[Math.floor(Math.random() * naoSorteadas.length)];
-    estado.professorEquacoesSorteadas.push({ ...sorteada, tipo: eq1Grau.includes(sorteada) ? '1grau' : '2grau' });
+    estado.professorEquacoesSorteadas.push(sorteada);
     estado.professorIndexSorteio++;
 
     professorEquation.textContent = `Equação ${estado.professorIndexSorteio}: ${sorteada.eq}`;
@@ -533,13 +539,14 @@
       for (const vitoria of vitorias) {
         if (vitoria.every(pos => respostasSorteadas.has(cartela[pos]))) {
           cartelasVencedoras.push(idx + 1);
-          break;
+          break; // Evita adicionar a mesma cartela múltiplas vezes
         }
       }
     });
     return cartelasVencedoras;
   }
 
+  // --- INICIALIZAÇÃO DA APLICAÇÃO ---
   mostrarTela('inicio');
 })();
 </script>
